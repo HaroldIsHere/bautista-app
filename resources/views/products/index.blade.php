@@ -1,43 +1,25 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <p>Products:</p>
-    <table>
-        <thread>
+<x-layout>
+    <x-slot:heading>
+        Product List
+    </x-slot>
+
+    <x-table>
+        <thead>
             <tr>
-                @foreach (['Id', 'Name', 'Category'] as $column)
-                    <td>{{ $column }}</td>
-                @endforeach
+                <th scope="col">#</th>
+                <th scope="col">Product</th>
+                <th scope="col">Category</th>
             </tr>
-        </thread>
+        </thead>
+
         <tbody>
             @foreach ($products as $product)
                 <tr>
-                    <td>{{ $product['id'] }} </td>
-                    <td>{{ $product['name'] }} </td>
-                    <td>{{ $product['category'] }} </td>
-                 </tr>
+                    <th scope="row">{{ $product['id'] }}</th> {{-- Assuming $product is an Eloquent model --}}
+                    <td>{{ $product['name'] }}</td>
+                    <td>{{ $product['category'] }}</td>
+                </tr>
             @endforeach
         </tbody>
-        </table>
-
-    <p>Tasks:</p>
-    <ul>
-        @foreach (@tasks as $task)
-            <li> {{ $task }} <li>
-        @endforeach
-    </ul>
-
-    <p> Global variables: </p>
-    <p> {{ $sharedVariable }} </p>
-
-    <p> Product Key: {{ $productKey }}</p>
-
-</body>
-</html>
-
-
-
-
-
-
+    </x-table>
+</x-layout>

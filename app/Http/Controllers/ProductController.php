@@ -6,33 +6,48 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use App\Services\TaskService;
 
-class Product extends Controller
+class ProductController extends Controller
 {
-    public function __construct(
-        protected TaskService $taskService
-    ) {}
+    protected ProductService $productService;
+    protected TaskService $taskService;
+
+    public function __construct(ProductService $productService, TaskService $taskService)
+    {
+        $this->productService = $productService;
+        $this->taskService = $taskService;
+    }
+
     /**
      * Display a listing of the resource.
      */
-    public function index(ProductService $productService)
+    public function index()
     {
         $newProduct = [
             'id' => 4,
             'name' => 'Red',
             'category' => 'Color'
         ];
-        $productService->insert($newProduct);
+        $this->productService->insert($newProduct);
         $this->taskService->add('Add to cart');
-        $this->taslService->add('Checkout');
+        $this->taskService->add('Checkout'); // Fixed typo
 
         $data = [
-            'products' => $productService->listProducts(),
+            'products' => $this->productService->listProducts(),
             'tasks' => $this->taskService->getAllTasks()
         ];
 
         return view('products.index', $data);
     }
-    //
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $product = collect($this->productService->listProducts())->firstWhere('id', $id);
+
+        return response()->json($product);
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -48,18 +63,6 @@ class Product extends Controller
     public function store(Request $request)
     {
         //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProductService $productService, string $id)
-    {
-        $product = collect($productService->listProducts())->filter(function ($item) use ($id){
-            return $item['id'] == $id;
-        })->first();
-
-        return $product;
     }
 
     /**

@@ -5,8 +5,8 @@ namespace App\Services;
 class TaskService {
     protected $tasks = [];
 
-    public function add($add) {
-        $this->tasks[] = $name;
+    public function add($task) {
+        $this->tasks[] = $task; 
     }
 
     public function getAllTasks() {
